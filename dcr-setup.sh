@@ -69,7 +69,7 @@ Description=dcrd
 [Service]
 Type=simple
 WorkingDirectory=/var/dcrd
-ExecStart=/opt/dcr/dcrd -u=dcr -P='${pw}' --notls --appdata=/var/dcrd --addpeer=dcr1.jz.bz --externalip='${ip}'
+ExecStart=/opt/dcr/dcrd -u=dcr -P='${pw}' --notls --appdata=/var/dcrd --externalip='${ip}'
 Restart=on-abnormal
 
 [Install]
