@@ -11,7 +11,7 @@
 # journalctl -u {dcrd|dcrwallet}
 
 # Update system and install tools.
-t=curl htop
+t='curl htop'
 
 if command -v apt 2>&1 >/dev/null; then
 	sudo apt update -y && sudo apt upgrade -y && sudo apt install -y ${t}
@@ -91,7 +91,7 @@ Restart=on-abnormal
 WantedBy=multi-user.target
 EOF'
 
-# Enable + start services
+# Enable + start services.
 sudo systemctl enable dcrd
 sudo systemctl start dcrd
 sudo systemctl enable dcrwallet
