@@ -10,15 +10,18 @@
 # Check service log:
 # journalctl -u {dcrd|dcrwallet}
 
+# Get sudo permissions.
+sudo bash
+
 # Update system and install tools.
 t='curl htop'
 
 if command -v apt 2>&1 >/dev/null; then
-	sudo apt update -y && sudo apt upgrade -y && sudo apt install -y ${t}
+	apt update -y && apt upgrade -y && apt install -y ${t}
 fi
 
 if command -v dnf 2>&1 >/dev/null; then
-	sudo dnf update -y && sudo dnf install -y ${t}
+	dnf update -y && dnf install -y ${t}
 fi
 
 # Set Decred version, CPU architecture, binaries archive name.
@@ -42,12 +45,10 @@ sha256sum ${b}
 read -n1 -r -p "Make sure the two SHA256 checksums above match and that the manifest file has a good PGP signature. To continue press any key."; echo
 
 # Make directories.
-sudo mkdir -p /opt/dcr
-sudo mkdir -p /var/dcrd
-sudo mkdir -p /var/dcrwallet
+mkdir -p /opt/dcr /var/dcrd /var/dcrwallet
 
 # Extract Decred binaries.
-sudo tar -xf ${b} --strip-components 1 -C /opt/dcr/
+tar -xf ${b} --strip-components 1 -C /opt/dcr/
 
 # Get IP address.
 ip=$(curl https://icanhazip.com)
@@ -59,25 +60,25 @@ pw=$(openssl rand -base64 32)
 read -p "Input the password you wish to use for the Decred wallet and press "Enter" (you will need to set the same password in the next step upon wallet creation): " wpw
 
 # Create wallet.
-sudo /opt/dcr/dcrwallet --appdata=/var/dcrwallet --create
+/opt/dcr/dcrwallet --appdata=/var/dcrwallet --create
 
 # Create dcrd service.
-sudo bash -c 'cat > /etc/systemd/system/dcrd.service <<EOF
+cat > /etc/systemd/system/dcrd.service <<EOF
 [Unit]
 Description=dcrd
 
 [Service]
 Type=simple
 WorkingDirectory=/var/dcrd
-ExecStart=/opt/dcr/dcrd -u=dcr -P='${pw}' --notls --appdata=/var/dcrd --externalip='${ip}'
+ExecStart=/opt/dcr/dcrd -u=dcr -P='${pw}' --notls --appdata=/var/dcrd --addpeer=dcr1.jz.bz --externalip='${ip}'
 Restart=on-abnormal
 
 [Install]
 WantedBy=multi-user.target
-EOF'
+EOF
 
 # Create dcrwallet service.
-sudo bash -c 'cat > /etc/systemd/system/dcrwallet.service <<EOF
+cat > /etc/systemd/system/dcrwallet.service <<EOF
 [Unit]
 Description=dcrwallet
 
@@ -89,10 +90,8 @@ Restart=on-abnormal
 
 [Install]
 WantedBy=multi-user.target
-EOF'
+EOF
 
 # Enable + start services.
-sudo systemctl enable dcrd
-sudo systemctl start dcrd
-sudo systemctl enable dcrwallet
-sudo systemctl start dcrwallet
+systemctl enable dcrd dcrwallet
+systemctl start dcrd dcrwallet
