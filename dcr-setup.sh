@@ -70,7 +70,7 @@ Description=dcrd
 [Service]
 Type=simple
 WorkingDirectory=/var/dcrd
-ExecStart=/opt/dcr/dcrd -u=dcr -P='${pw}' --notls --appdata=/var/dcrd --externalip='${ip}'
+ExecStart=/opt/dcr/dcrd -u=dcr -P=${pw} --notls --appdata=/var/dcrd --externalip=${ip}
 Restart=on-abnormal
 
 [Install]
@@ -85,7 +85,7 @@ Description=dcrwallet
 [Service]
 Type=simple
 WorkingDirectory=/var/dcrwallet
-ExecStart=/opt/dcr/dcrwallet -u=dcr -P='${pw}' --noclienttls --noservertls --appdata=/var/dcrwallet --pass="${wpw}" --enablevoting
+ExecStart=/opt/dcr/dcrwallet -u=dcr -P=${pw} --noclienttls --noservertls --appdata=/var/dcrwallet --pass=\"${wpw}\" --enablevoting
 Restart=on-abnormal
 
 [Install]
