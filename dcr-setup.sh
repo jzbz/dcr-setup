@@ -14,7 +14,7 @@
 sudo bash
 
 # Update system and install tools.
-t='curl htop'
+t='htop'
 
 if command -v apt 2>&1 >/dev/null; then
 	apt update -y && apt upgrade -y && apt install -y ${t}
@@ -25,7 +25,7 @@ if command -v dnf 2>&1 >/dev/null; then
 fi
 
 # Set Decred version, CPU architecture, binaries archive name.
-v=v1.4.0
+v=v1.5.0
 a=amd64
 b=decred-linux-${a}-${v}.tar.gz
 
@@ -50,9 +50,6 @@ mkdir -p /opt/dcr /var/dcrd /var/dcrwallet
 # Extract Decred binaries.
 tar -xf ${b} --strip-components 1 -C /opt/dcr/
 
-# Get IP address.
-ip=$(curl https://icanhazip.com)
-
 # Create random password.
 pw=$(openssl rand -base64 32)
 
@@ -70,7 +67,7 @@ Description=dcrd
 [Service]
 Type=simple
 WorkingDirectory=/var/dcrd
-ExecStart=/opt/dcr/dcrd -u=dcr -P=${pw} --notls --appdata=/var/dcrd --externalip=${ip}
+ExecStart=/opt/dcr/dcrd -u=dcr -P=${pw} --notls --appdata=/var/dcrd
 Restart=on-abnormal
 
 [Install]
