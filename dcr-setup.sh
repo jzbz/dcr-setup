@@ -10,6 +10,9 @@
 # Check service log:
 # journalctl -u {dcrd|dcrwallet}
 
+# Use dcrctl with:
+# dcrctl --rpcuser dcr --rpcpass <password> --rpccert=/var/dcrd/rpc.cert <command>
+
 # Get sudo permissions.
 sudo bash
 
@@ -45,10 +48,10 @@ sha256sum ${b}
 read -n1 -r -p "Make sure the two SHA256 checksums above match and that the manifest file has a good PGP signature. To continue press any key."; echo
 
 # Make directories.
-mkdir -p /opt/dcr /var/dcrd /var/dcrwallet
+mkdir -p /root/decred
 
 # Extract Decred binaries.
-tar -xf ${b} --strip-components 1 -C /opt/dcr/
+tar -xf ${b} --strip-components 1 -C /root/decred/
 
 # Create random password.
 pw=$(openssl rand -base64 32)
@@ -57,7 +60,7 @@ pw=$(openssl rand -base64 32)
 read -p "Input the password you wish to use for the Decred wallet and press "Enter" (you will need to set the same password in the next step upon wallet creation): " wpw
 
 # Create wallet.
-/opt/dcr/dcrwallet --appdata=/var/dcrwallet --create
+/root/decred/dcrwallet --create
 
 # Create dcrd service.
 cat > /etc/systemd/system/dcrd.service <<EOF
@@ -66,8 +69,8 @@ Description=dcrd
 
 [Service]
 Type=simple
-WorkingDirectory=/var/dcrd
-ExecStart=/opt/dcr/dcrd -u=dcr -P=${pw} --notls --appdata=/var/dcrd
+WorkingDirectory=/root/.dcrd
+ExecStart=/root/decred/dcrd --appdata=/root/.dcrd -u=dcr -P=${pw}
 Restart=on-abnormal
 
 [Install]
@@ -81,8 +84,8 @@ Description=dcrwallet
 
 [Service]
 Type=simple
-WorkingDirectory=/var/dcrwallet
-ExecStart=/opt/dcr/dcrwallet -u=dcr -P=${pw} --noclienttls --noservertls --appdata=/var/dcrwallet --pass=\"${wpw}\" --enablevoting
+WorkingDirectory=/root/.dcrwallet
+ExecStart=/root/decred/dcrwallet --appdata=/root/.dcrwallet -u=dcr -P=${pw} --pass=\"${wpw}\" --enablevoting
 Restart=on-abnormal
 
 [Install]
