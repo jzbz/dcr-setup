@@ -28,18 +28,18 @@ if command -v dnf 2>&1 >/dev/null; then
 fi
 
 # Set Decred version, CPU architecture, binaries archive name.
-v=v1.5.0
+v=v1.5.1
 a=amd64
 b=decred-linux-${a}-${v}.tar.gz
 
 # Download Decred binaries archive, manifest, and signature files.
-wget https://github.com/decred/decred-binaries/releases/download/${v}/{${b},manifest-${v}.txt,manifest-${v}.txt.asc}
+wget https://github.com/decred/decred-binaries/releases/download/${v}/{${b},decred-${v}-manifest.txt,decred-${v}-manifest.txt.asc}
 
 # Verify PGP signature.
-gpg --verify manifest-${v}.txt.asc
+gpg --verify decred-${v}-manifest.txt.asc
 
 # Print SHA256 hash from manifest.
-cat manifest-${v}.txt | grep ${b}
+cat decred-${v}-manifest.txt | grep ${b}
 
 # Get SHA256 hash of downloaded binary archive.
 sha256sum ${b}
