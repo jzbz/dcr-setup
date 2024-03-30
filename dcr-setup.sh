@@ -28,7 +28,7 @@ if command -v dnf 2>&1 >/dev/null; then
 fi
 
 # Set Decred version, CPU architecture, binaries archive name.
-v=v1.5.1
+v=v1.8.1
 a=amd64
 b=decred-linux-${a}-${v}.tar.gz
 
